@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="main-header">
+                <div class="launcher-icon-box">
+                    <img id="launcherIcon" src="images/launcher-icon.png" alt="launcher-icon">
+                </div>
+                <div class="script-dropdown-box">
+                    <select id="scriptDropdown">
+                        <option value="0">Select Script</option>
+                        <!-- placeholder names -->
+                        <option value="1">Script 1</option>
+                        <option value="2">Script 2</option>
+                        <option value="3">Script 3</option>
+                        <option value="4">Script 4</option>
+                        <option value="5">Script 5</option>
+                    </select>
+                </div>
+                <div id="colorSizeStatus" title="this color changes based of screen size (debug only)"></div>
+            </div>
+            <div class="ribbon">
+                <div class="ribbon-actions">
+                    <ul>
+                        <li id="controlBtn">Control</li>
+                        <li id="joystickBtn">Joystick</li>
+                        <li id="recordedBtn">Recorded</li>
+                        <li id="drawingBtn">Drawing</li>
+                        <li id="moreBtn">...</li>
+                    </ul>
+                </div>
+                <div class="toggle-header-box">
+                    <img id="toggleHeaderIcon" src="images/toggle-header-icon.png" alt="toggle-header-icon">
+                </div>
+            </div>
+        </div>
+        <div class="alert">
+            <div class="alert-icon-box">
+                <img id="alertIcon" src="images/alert-icon.png" alt="alert-icon">
+            </div>
+            <div class="alert-message-box">
+                <p id="alertMessage">
+                    This is an alert message
+                </p>
+            </div>
+            <div class="alert-close-box">
+                <img id="alertCloseIcon"
+                src="images/alert-close-icon.png" alt="alert-close-icon">
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content">
+        </div>
+    </div>
+</body>
+</html>

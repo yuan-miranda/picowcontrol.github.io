@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* 1rem = 16px */
+    font-size: 16px;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F5F5F5;
+}
+
+img {
+    width: 2rem;
+    /* remove the wierd space below the image */
+    display: block;
+    cursor: pointer;
+}
+
+select {
+    font-size: 1.2rem;
+    border: none;
+    background-color: transparent;
+    margin-left: 1rem;
+}
+
+.header-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F5;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-bottom: solid 0.1rem #D3D3D3;
+    box-shadow: 0 0.1rem 0.1rem #D3D3D3;
+}
+
+.main-header,
+.ribbon,
+.alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ribbon-actions ul {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;  
+}
+
+.ribbon-actions ul li {
+    margin-right: 0.5rem;
+}
+
+.toggle-header-box {
+    margin: 0 0.5rem;
+}
+
+.alert {
+    background-color: #2A2F33;
+    color: white;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.1rem 0.1rem #D3D3D3;
+    transition: transform 0.5s, box-shadow 0.5s;
+}
+
+.alert:hover {
+    box-shadow: 0 0.25rem 0.25rem #D3D3D3;
+}
+
+.toggle-header-box,
+.alert-close-box {
+    margin-left: auto;
+}
+
+#colorSizeStatus {
+    padding: 0.5rem;
+    color: white;
+    margin: 0 1rem;
+    margin-left: auto;
+    outline: solid 0.1rem black;
+}
+
+/* Credit: https://stackoverflow.com/a/7354648
+ */
+@media (max-width:319px) {
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: black;
+    }
+}
+
+@media (min-width:320px)  {
+    /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: red;
+    }
+}
+@media (min-width:480px)  {
+    /* smartphones, Android phones, landscape iPhone */
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: green;
+    }
+}
+@media (min-width:600px)  {
+    /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: blue;
+    }
+}
+@media (min-width:801px)  {
+    /* tablet, landscape iPad, lo-res laptops ands desktops */
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: yellow;
+    }
+}
+@media (min-width:1025px) {
+    /* big landscape tablets, laptops, and desktops */
+    html {
+        font-size: 6px;
+    }
+    #colorSizeStatus {
+        background-color: orange;
+    }
+}
+@media (min-width:1281px) {
+    /* hi-res laptops and desktops */
+    html {
+        font-size: 16px;
+    }
+    #colorSizeStatus {
+        background-color: purple;
+    }
+}
