@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+html, body {
+    overscroll-behavior: none;
+    user-select: none;
+}
+
 html {
     /* 1rem = 16px */
     font-size: 16px;
