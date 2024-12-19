@@ -25,6 +25,22 @@ img {
     display: block;
     cursor: pointer;
 }
+#launcherIcon {
+    cursor: pointer;
+}
+#toggleHeaderIcon {
+    width: 1.5rem;
+    cursor: pointer;
+}
+#alertIcon {
+    width: 1.5rem;
+}
+#alertCloseIcon {
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+
 
 select {
     font-size: 1.2rem;
@@ -48,6 +64,10 @@ select {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.ribbon {
+    margin-top: 0.25rem;
 }
 
 .ribbon-actions ul {
@@ -86,7 +106,7 @@ select {
 #colorSizeStatus {
     padding: 0.5rem;
     color: white;
-    margin: 0 1rem;
+    margin: 0 0.75rem;
     margin-left: auto;
     outline: solid 0.1rem black;
 }
