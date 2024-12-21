@@ -75,6 +75,13 @@ select {
 .ribbon-actions ul li {
     margin-right: 0.5rem;
 }
+.ribbon-actions ul li:hover {
+    /* add underscore */
+    text-decoration: underline;
+}
+.ribbon-actions ul li:last-child {
+    margin-right: 0;
+}
 
 .toggle-header-box {
     margin: 0 0.5rem;
