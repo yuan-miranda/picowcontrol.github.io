@@ -14,7 +14,7 @@ export async function loadHeader() {
 }
 
 // 0: truncated, 1: expanded, 2: hidden, 3: none
-let alertMessageBoxToggleState = 3;
+let alertMessageBoxToggleState = 0;
 // 0: visible, 1: hidden
 let mainHeaderToggleState = 0;
 

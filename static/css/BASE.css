@@ -52,6 +52,9 @@ img {
     #colorSizeStatus {
         background-color: black;
     }
+    .launcher-panel {
+        width: 100%;
+    }
 }
 
 @media (min-width:320px)  {

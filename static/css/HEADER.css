@@ -61,3 +61,16 @@ select {
     margin-left: auto;
     outline: solid 0.1rem black;
 }
+
+.launcher-panel.active {
+    position: fixed;
+    width: 50rem;
+    height: 100%;
+    background-color: #F5F5F5;
+    border: solid 0.1rem #D3D3D3;
+    z-index: 1000;
+}
+
+.launcher-panel {
+    display: none;
+}
