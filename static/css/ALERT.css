@@ -1,0 +1,39 @@
+#alertIcon,
+#alertCloseIcon {
+    width: 1.5rem;
+}
+
+.alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    width: 50%;
+    background-color: #2A2F33;
+    color: white;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.1rem 0.1rem #D3D3D3;
+    transition: transform 0.5s, box-shadow 0.5s;
+}
+
+/* add margin to child of alert */
+.alert > * {
+    margin: 0 0.125rem;
+}
+
+.alert:hover {
+    box-shadow: 0 0.25rem 0.25rem #D3D3D3;
+}
+
+.alert-message-box {
+    margin-left: 0.5rem;
+}
+
+.alert-close-box {
+    margin-left: auto;
+}

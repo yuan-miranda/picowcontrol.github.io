@@ -7,7 +7,7 @@ export async function loadHeader() {
         loadStoredValues();
         toggleAlertMessageBoxStateListener();
         toggleMainHeaderListener();
-        ribbonActions();
+        ribbonActionsBtnListener();
     } catch (error) {
         console.error(error);
     }
@@ -21,9 +21,23 @@ let mainHeaderToggleState = 0;
 function loadStoredValues() {
     const alertToggleState = localStorage.getItem("alertMessageBoxToggleState");
     const headerToggleState = localStorage.getItem("mainHeaderToggleState");
+    const activeRibbonBtn = localStorage.getItem("activeRibbonBtn");
 
     if (alertToggleState) { alertMessageBoxToggleState = parseInt(alertToggleState, 10); }
     if (headerToggleState) { mainHeaderToggleState = parseInt(headerToggleState, 10); }
+    if (activeRibbonBtn) {
+        // remove when the current url is not the same as the activeRibbonBtn
+        const currentUrl = window.location.href
+            .split("/")
+            .slice(-1)[0]
+            .split(".")[0];
+        if (activeRibbonBtn !== currentUrl) {
+            localStorage.removeItem("activeRibbonBtn");
+            return;
+        }
+        const btn = document.getElementById(activeRibbonBtn);
+        if (btn) { addActiveClassToRibbonBtn(btn); }
+    }
 }
 
 function toggleAlertMessageBoxStateListener() {
@@ -116,37 +130,53 @@ function toggleMainHeaderState() {
     }
 }
 
-{/* <div class="ribbon-actions">
-<ul>
-    <li id="controlBtn">Control</li>
-    <li id="joystickBtn">Joystick</li>
-    <li id="recordedBtn">Recorded</li>
-    <li id="drawingBtn">Drawing</li>
-    <li id="moreBtn">...</li>
-</ul>
-</div> */}
+function addActiveClassToRibbonBtn(btn) {
+    const ribbonActions = document.querySelector(".ribbon-actions ul");
+    ribbonActions.querySelectorAll("li").forEach((element) => {
+        element.classList.remove("active");
+    });
+    btn.classList.add("active");
+    localStorage.setItem("activeRibbonBtn", btn.id);
+}
 
-function ribbonActions() {
-    const controlBtn = document.getElementById("controlBtn");
-    const joystickBtn = document.getElementById("joystickBtn");
-    const recordedBtn = document.getElementById("recordedBtn");
-    const drawingBtn = document.getElementById("drawingBtn");
-    const moreBtn = document.getElementById("moreBtn");
+function ribbonActionsBtnListener() {
+    const controlBtn = document.getElementById("pico-rc_control");
+    const joystickBtn = document.getElementById("pico-rc_joystick");
+    const recordedBtn = document.getElementById("pico-rc_recorded");
+    const drawingBtn = document.getElementById("pico-rc_drawing");
+    const moreBtn = document.getElementById("pico-rc_more");
 
     controlBtn.addEventListener("click", () => {
-        window.location.href = "../html/control.html";
+        addActiveClassToRibbonBtn(controlBtn);
+        window.location.href = "../html/pico-rc_control.html";
     });
     joystickBtn.addEventListener("click", () => {
-        window.location.href = "../html/joystick.html";
+        addActiveClassToRibbonBtn(joystickBtn);
+        window.location.href = "../html/pico-rc_joystick.html";
     });
     recordedBtn.addEventListener("click", () => {
-        window.location.href = "../html/recorded.html";
+        addActiveClassToRibbonBtn(recordedBtn);
+        window.location.href = "../html/pico-rc_recorded.html";
     });
     drawingBtn.addEventListener("click", () => {
-        window.location.href = "../html/drawing.html";
+        addActiveClassToRibbonBtn(drawingBtn);
+        window.location.href = "../html/pico-rc_drawing.html";
     });
     moreBtn.addEventListener("click", () => {
         // load the rest of "li" elements to the list
         // code here
+    });
+}
+
+function launcherPanelListener() {
+    const launcherIcon = document.getElementById("launcherIcon");
+    const launcherPanel = document.querySelector(".launcher-panel");
+
+    launcherIcon.addEventListener("click", () => {
+        if (launcherPanel.style.display === "none") {
+            launcherPanel.style.display = "block";
+        } else {
+            launcherPanel.style.display = "none";
+        }
     });
 }

@@ -1,0 +1,63 @@
+#launcherIcon {
+    cursor: pointer;
+}
+#toggleHeaderIcon,
+#expandErrorMessageIcon {
+    width: 1.5rem;
+}
+
+select {
+    font-size: 1.2rem;
+    border: none;
+    background-color: transparent;
+    margin-left: 1rem;
+}
+
+.header-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F5;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    border-bottom: solid 0.1rem #D3D3D3;
+    box-shadow: 0 0.1rem 0.1rem #D3D3D3;
+}
+
+.main-header,
+.ribbon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ribbon {
+    margin-top: 0.25rem;
+}
+
+.ribbon-actions ul {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;  
+}
+
+.ribbon-actions ul li {
+    margin-right: 0.5rem;
+}
+.ribbon-actions ul li:hover,
+.ribbon-actions ul li.active {
+    text-decoration: underline !important;
+}
+.ribbon-actions ul li:last-child {
+    margin-right: 0;
+}
+
+.toggle-header-box {
+    margin: 0 0.5rem 0 auto;
+}
+
+#colorSizeStatus {
+    padding: 0.5rem;
+    color: white;
+    margin: 0 0.75rem;
+    margin-left: auto;
+    outline: solid 0.1rem black;
+}
