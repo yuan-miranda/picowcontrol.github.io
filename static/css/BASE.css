@@ -45,14 +45,14 @@ img {
 
 /* Credit: https://stackoverflow.com/a/7354648
  */
- @media (max-width:319px) {
+ @media (max-width:320px) {
     html {
         font-size: 6px;
     }
     #colorSizeStatus {
         background-color: black;
     }
-    .launcher-panel {
+    .launcher-panel.active {
         width: 100%;
     }
 }

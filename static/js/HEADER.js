@@ -8,6 +8,7 @@ export async function loadHeader() {
         toggleAlertMessageBoxStateListener();
         toggleMainHeaderListener();
         ribbonActionsBtnListener();
+        launcherPanelListener();
     } catch (error) {
         console.error(error);
     }
@@ -173,10 +174,7 @@ function launcherPanelListener() {
     const launcherPanel = document.querySelector(".launcher-panel");
 
     launcherIcon.addEventListener("click", () => {
-        if (launcherPanel.style.display === "none") {
-            launcherPanel.style.display = "block";
-        } else {
-            launcherPanel.style.display = "none";
-        }
+        // add class "active" to the launcherPanel.
+        launcherPanel.classList.toggle("active");
     });
 }
