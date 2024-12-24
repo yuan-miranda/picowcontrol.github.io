@@ -1,8 +1,3 @@
-#alertIcon,
-#alertCloseIcon {
-    width: 1.5rem;
-}
-
 .alert {
     display: flex;
     flex-direction: row;
@@ -30,10 +25,107 @@
     box-shadow: 0 0.25rem 0.25rem #D3D3D3;
 }
 
+#alertIcon,
+#alertCloseIcon {
+    width: 1.5rem;
+}
+
 .alert-message-box {
     margin-left: 0.5rem;
 }
 
 .alert-close-box {
     margin-left: auto;
+}
+
+/* 
+    different states of alert message box
+    toggleAlertMessageBoxState() in HEADER.js
+*/
+/* 0 = truncated */
+.alert.truncated {
+    width: 50%;
+}
+.alert-message-box.truncated {
+    display: block;
+}
+#alertMessage.truncated {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 1;
+    visibility: visible;
+}
+#expandErrorMessageIcon.truncated {
+    transform: rotate(0deg);
+}
+
+/* 1 = expanded */
+.alert.expanded {
+    width: 50%;
+}
+.alert-message-box.expanded {
+    display: block;
+}
+#alertMessage.expanded {
+    display: block;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    -webkit-line-clamp: unset;
+    visibility: visible;
+}
+#expandErrorMessageIcon.expanded {
+    transform: rotate(90deg);
+}
+
+/* 2 = hidden */
+.alert.hidden {
+    width: auto;
+}
+.alert-message-box.hidden {
+    display: none;
+}
+#expandErrorMessageIcon.hidden {
+    transform: rotate(180deg);
+}
+
+/* 3 = none */
+.alert.none {
+    display: none;
+}
+
+/* 
+    different states of main header
+    toggleMainHeaderState() in HEADER.js
+*/
+/* 0 = visible */
+.main-header.visible {
+    display: flex;
+}
+#toggleHeaderIcon.visible {
+    transform: rotate(0deg);
+}
+.header-container.visible {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+}
+.ribbon.visible {
+    margin-top: 0.25rem;
+}
+
+/* 1 = hidden */
+.main-header.hidden {
+    display: none;
+}
+#toggleHeaderIcon.hidden {
+    transform: rotate(180deg);
+}
+.header-container.hidden {
+    padding: 0 0.5rem 0 0.5rem;
+}
+.ribbon.hidden {
+    margin-top: 0;
 }

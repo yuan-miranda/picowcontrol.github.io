@@ -41,93 +41,85 @@ function loadStoredValues() {
     }
 }
 
+function addClassTo(elements, className) {
+    elements.forEach((element) => {
+        element.classList.add(className);
+    });
+}
+
+function removeClassFrom(elements, className) {
+    elements.forEach((element) => {
+        element.classList.remove(className);
+    });
+}
+
 function toggleAlertMessageBoxStateListener() {
-    toggleAlertMessageBoxState();
-    document.getElementById("expandErrorMessageIcon").addEventListener("click", () => {
-        alertMessageBoxToggleState = (alertMessageBoxToggleState + 1) % 3;
+    const expandErrorMessageIcon = document.getElementById("expandErrorMessageIcon");
+    expandErrorMessageIcon.addEventListener("click", () => {
+        alertMessageBoxToggleState = (alertMessageBoxToggleState + 1) % 3; // cycle through 0, 1, 2
         localStorage.setItem("alertMessageBoxToggleState", alertMessageBoxToggleState);
         toggleAlertMessageBoxState();
     });
+    alertMessageBoxToggleState = parseInt(localStorage.getItem("alertMessageBoxToggleState")) || 0;
+    toggleAlertMessageBoxState();
 }
+
 function toggleAlertMessageBoxState() {
-    console.log(alertMessageBoxToggleState);
     const alertMessage = document.getElementById("alertMessage");
     const alertMessageBox = document.querySelector(".alert-message-box");
-    
+    const expandErrorMessageIcon = document.getElementById("expandErrorMessageIcon");
     const alert = document.querySelector(".alert");
+
+    removeClassFrom([alertMessage, alertMessageBox, expandErrorMessageIcon, alert], "truncated");
+    removeClassFrom([alertMessage, alertMessageBox, expandErrorMessageIcon, alert], "expanded");
+    removeClassFrom([alertMessageBox, expandErrorMessageIcon, alert], "hidden");
+    removeClassFrom([alert], "none");
+
     switch (alertMessageBoxToggleState) {
         case 0:
             // truncated
-            alertMessage.style.display = "-webkit-box";
-            alertMessage.style.webkitBoxOrient = "vertical";
-            alertMessage.style.overflow = "hidden";
-            alertMessage.style.textOverflow = "ellipsis";
-            alertMessage.style.whiteSpace = "normal";
-            alertMessage.style.webkitLineClamp = "1";
-            alertMessage.style.visibility = "visible";
-
-            expandErrorMessageIcon.style.transform = "rotate(0deg)";
-            alertMessageBox.style.display = "block";
-            alert.style.width = "50%";
+            addClassTo([alertMessage, alertMessageBox, expandErrorMessageIcon, alert], "truncated");
             break;
         case 1:
             // expanded
-            alertMessage.style.display = "block";
-            alertMessage.style.webkitBoxOrient = "unset";
-            alertMessage.style.overflow = "visible";
-            alertMessage.style.textOverflow = "unset";
-            alertMessage.style.whiteSpace = "normal";
-            alertMessage.style.webkitLineClamp = "unset";
-            alertMessage.style.visibility = "visible";
-
-            expandErrorMessageIcon.style.transform = "rotate(180deg)";
-            alert.style.width = "50%";
+            addClassTo([alertMessage, alertMessageBox, expandErrorMessageIcon, alert], "expanded");
             break;
         case 2:
             // hidden
-            alertMessageBox.style.display = "none";
-
-            expandErrorMessageIcon.style.transform = "rotate(90deg)";
-            alert.style.width = "auto";
+            addClassTo([alertMessageBox, expandErrorMessageIcon, alert], "hidden");
             break;
         case 3:
             // none
-            alert.style.display = "none";
+            addClassTo([alert], "none");
             break;
     }
 }
 
+
 function toggleMainHeaderListener() {
-    toggleMainHeaderState();
-    document.getElementById("toggleHeaderIcon").addEventListener("click", () => {
+    const toggleHeaderIcon = document.getElementById("toggleHeaderIcon");
+    toggleHeaderIcon.addEventListener("click", () => {
         mainHeaderToggleState = (mainHeaderToggleState + 1) % 2;
         localStorage.setItem("mainHeaderToggleState", mainHeaderToggleState);
         toggleMainHeaderState();
     });
+    toggleMainHeaderState();
 }
-
 function toggleMainHeaderState() {
     const mainHeader = document.querySelector(".main-header");
     const toggleHeaderIcon = document.getElementById("toggleHeaderIcon");
     const headerContainer = document.querySelector(".header-container");
     const ribbon = document.querySelector(".ribbon");
 
+    removeClassFrom([mainHeader, toggleHeaderIcon, headerContainer, ribbon], "visible");
+    removeClassFrom([mainHeader, toggleHeaderIcon, headerContainer, ribbon], "hidden");
+
     if (mainHeaderToggleState === 0) {
         // visible
-        mainHeader.style.display = "flex";
-        toggleHeaderIcon.style.transform = "rotate(0deg)";
-
-        // restore values
-        headerContainer.style.padding = "0.5rem 0.5rem 0 0.5rem";
-        ribbon.style.marginTop = "0.25rem";
+        addClassTo([mainHeader, toggleHeaderIcon, headerContainer, ribbon], "visible");
     } else if (mainHeaderToggleState === 1) {
         // hidden
-        mainHeader.style.display = "none";
-        toggleHeaderIcon.style.transform = "rotate(180deg)";
-
-        // remove header-container padding and ribbon margin
-        headerContainer.style.padding = "0 0.5rem 0 0.5rem";
-        ribbon.style.marginTop = "0";
+        addClassTo([mainHeader, toggleHeaderIcon, headerContainer, ribbon], "hidden");
     }
 }
 
@@ -174,7 +166,6 @@ function launcherPanelListener() {
     const launcherPanel = document.querySelector(".launcher-panel");
 
     launcherIcon.addEventListener("click", () => {
-        // add class "active" to the launcherPanel.
         launcherPanel.classList.toggle("active");
     });
 }
