@@ -78,7 +78,7 @@ img {
 @media (min-width:600px)  {
     /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
     html {
-        font-size: 6px;
+        font-size: 16px;
     }
     #colorSizeStatus {
         background-color: blue;
@@ -87,7 +87,7 @@ img {
 @media (min-width:801px)  {
     /* tablet, landscape iPad, lo-res laptops ands desktops */
     html {
-        font-size: 6px;
+        font-size: 16px;
     }
     #colorSizeStatus {
         background-color: yellow;
@@ -96,7 +96,7 @@ img {
 @media (min-width:1025px) {
     /* big landscape tablets, laptops, and desktops */
     html {
-        font-size: 6px;
+        font-size: 16px;
     }
     #colorSizeStatus {
         background-color: orange;
