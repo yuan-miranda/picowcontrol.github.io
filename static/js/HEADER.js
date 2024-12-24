@@ -22,6 +22,7 @@ function setScreenSizeH1() {
     screenWidth.innerHTML = window.innerWidth;
     screenHeight.innerHTML = window.innerHeight;
     screenOrientation.innerHTML = window.screen.orientation.type;
+    alert(screenWidth.innerHTML);
     window.addEventListener("resize", () => {
         screenWidth.innerHTML = window.innerWidth;
         screenHeight.innerHTML = window.innerHeight;
