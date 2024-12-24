@@ -4,6 +4,7 @@ export async function loadHeader() {
         const data = await response.text();
         document.querySelector("header").innerHTML = data;
 
+        setScreenSizeH1();
         loadStoredValues();
         toggleAlertMessageBoxStateListener();
         toggleMainHeaderListener();
@@ -12,6 +13,20 @@ export async function loadHeader() {
     } catch (error) {
         console.error(error);
     }
+}
+
+function setScreenSizeH1() {
+    const screenWidth = document.getElementById("screenWidth");
+    const screenHeight = document.getElementById("screenHeight");
+    const screenOrientation = document.getElementById("screenOrientation");
+    screenWidth.innerHTML = window.innerWidth;
+    screenHeight.innerHTML = window.innerHeight;
+    screenOrientation.innerHTML = window.screen.orientation.type;
+    window.addEventListener("resize", () => {
+        screenWidth.innerHTML = window.innerWidth;
+        screenHeight.innerHTML = window.innerHeight;
+        screenOrientation.innerHTML = window.screen.orientation.type;
+    });
 }
 
 // 0: truncated, 1: expanded, 2: hidden, 3: none
