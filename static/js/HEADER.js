@@ -1,14 +1,24 @@
+// CURRENT BUGS:
+/**
+ * 1. When the user clicks on the dropdown, the first action after the page reloads is not underlined (active class)
+ * 2. Theres a bug where when you leave and come back to the page and your on like on action page, the url is still there, but the active class is not there
+ * 2.1 and the dropdown is not selected, its "Select Script"
+ * 3. Randomly disconnects from the server and never can connect back (fixed by restarting the server by brute force lol)
+ * 4. This current implementation would not work on GitHub Pages because it uses a server to fetch the scripts and actions
+ * 4.1 Will need to implment a way to fetch the scripts and actions from the client side (premade list of scripts and actions)
+ */
+
 export async function loadHeader() {
     try {
         const response = await fetch("../html/HEADER.html");
         const data = await response.text();
         document.querySelector("header").innerHTML = data;
 
-        loadStoredValues();
+        await loadStoredValues();
         toggleAlertMessageBoxStateListener();
         toggleMainHeaderListener();
-        ribbonActionsBtnListener();
         launcherPanelListener();
+        loadRibbonActionsListener();
     } catch (error) {
         console.error(error);
     }
@@ -19,13 +29,23 @@ let alertMessageBoxToggleState = 0;
 // 0: visible, 1: hidden
 let mainHeaderToggleState = 0;
 
-function loadStoredValues() {
+async function loadStoredValues() {
     const alertToggleState = localStorage.getItem("alertMessageBoxToggleState");
     const headerToggleState = localStorage.getItem("mainHeaderToggleState");
+    const selectedScript = localStorage.getItem("selectedScript");
     const activeRibbonBtn = localStorage.getItem("activeRibbonBtn");
-
+    
     if (alertToggleState) { alertMessageBoxToggleState = parseInt(alertToggleState, 10); }
     if (headerToggleState) { mainHeaderToggleState = parseInt(headerToggleState, 10); }
+
+    await loadScriptDropdown();
+    if (selectedScript) {
+        const scriptDropdown = document.getElementById("scriptDropdown");
+        const selectedIndex = Array.from(scriptDropdown.options).findIndex((option) => option.textContent === selectedScript);
+        scriptDropdown.selectedIndex = selectedIndex;
+        await loadRibbonActionsNoRedirect(selectedScript);
+    }
+
     if (activeRibbonBtn) {
         // remove when the current url is not the same as the activeRibbonBtn
         const currentUrl = window.location.href
@@ -132,32 +152,112 @@ function addActiveClassToRibbonBtn(btn) {
     localStorage.setItem("activeRibbonBtn", btn.id);
 }
 
-function ribbonActionsBtnListener() {
-    const controlBtn = document.getElementById("pico-rc_control");
-    const joystickBtn = document.getElementById("pico-rc_joystick");
-    const recordedBtn = document.getElementById("pico-rc_recorded");
-    const drawingBtn = document.getElementById("pico-rc_drawing");
-    const moreBtn = document.getElementById("pico-rc_more");
+async function loadScriptDropdown() {
+    const scriptDropdown = document.getElementById("scriptDropdown");
+    try {
+        const response = await fetch("/api/get/scripts");
+        if (!response.ok) {
+            alert("Failed to fetch scripts");
+            return;
+        }
+        const data = await response.json();
+        const scripts = data.scripts;
+        console.log(scripts);
+        scripts.forEach((script, index) => {
+            const option = document.createElement("option");
+            option.value = index + 1;
+            option.textContent = script;
+            scriptDropdown.appendChild(option);
+        });
+    } catch (error) {
+        console.error(error);
+        alert(`CATCH: ${error}`);
+    }
+}
 
-    controlBtn.addEventListener("click", () => {
-        addActiveClassToRibbonBtn(controlBtn);
-        window.location.href = "../html/pico-rc_control.html";
-    });
-    joystickBtn.addEventListener("click", () => {
-        addActiveClassToRibbonBtn(joystickBtn);
-        window.location.href = "../html/pico-rc_joystick.html";
-    });
-    recordedBtn.addEventListener("click", () => {
-        addActiveClassToRibbonBtn(recordedBtn);
-        window.location.href = "../html/pico-rc_recorded.html";
-    });
-    drawingBtn.addEventListener("click", () => {
-        addActiveClassToRibbonBtn(drawingBtn);
-        window.location.href = "../html/pico-rc_drawing.html";
-    });
-    moreBtn.addEventListener("click", () => {
-        // load the rest of "li" elements to the list
-        // code here
+async function loadRibbonActionsNoRedirect(script) {
+    const ribbonActions = document.querySelector(".ribbon-actions ul");
+    try {
+        const response = await fetch(`/api/get/actions/${script}`);
+        if (!response.ok) {
+            if (response.status === 403) {
+                alert("403 Forbidden: Directory traversal is not allowed");
+            }
+            else if (response.status === 404) {
+                alert(`404 Not Found: ${script} doesn't exist on "scripts" directory`);
+            } else {
+                console.error(response);
+                alert("Failed to fetch actions");
+            }
+            return;
+        }
+        const data = await response.json();
+        const actions = data.actions;
+        actions.forEach((action, index) => {
+            // ex: action = "action.py"
+            const actionName = action.split(".")[0];
+            const li = document.createElement("li");
+            li.id = `${script}_${actionName}`;
+            li.title = action;
+            li.textContent = actionName.charAt(0).toUpperCase() + actionName.slice(1);
+            ribbonActions.appendChild(li);
+
+            // event listener for each actions
+            li.addEventListener("click", () => {
+                addActiveClassToRibbonBtn(li);
+                console.log("click event", script, actionName);
+                window.location.href = `../html/${script}_${actionName}.html`;
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        alert(`CATCH: ${error}`);
+    }
+}
+
+async function redirectToFirstRibbonAction(script) {
+    try {
+        const response = await fetch(`/api/get/actions/${script}`);
+        if (!response.ok) {
+            if (response.status === 403) {
+                alert("403 Forbidden: Directory traversal is not allowed");
+            }
+            else if (response.status === 404) {
+                alert(`404 Not Found: ${script} doesn't exist on "scripts" directory`);
+            } else {
+                console.error(response);
+                alert("Failed to fetch actions");
+            }
+            return;
+        }
+        const data = await response.json();
+        const actions = data.actions;
+        const firstActionName = actions[0].split(".")[0];
+        window.location.href = `../html/${script}_${firstActionName}.html`;
+    } catch (error) {
+        console.error(error);
+        alert(`CATCH: ${error}`);
+    }
+}
+
+function loadRibbonActionsListener() {
+    const scriptDropdown = document.getElementById("scriptDropdown");
+    scriptDropdown.addEventListener("change", async () => {
+        const selectedIndex = scriptDropdown.selectedIndex;
+        const script = scriptDropdown.options[selectedIndex].textContent;
+        console.log(script, selectedIndex);
+        if (script === "Select Script") {
+            localStorage.removeItem("selectedScript");
+            window.location.href = "/";
+            return;
+        }
+        try {
+            localStorage.setItem("selectedScript", script);
+            await redirectToFirstRibbonAction(script);
+        } catch (error) {
+            console.error(error);
+            alert(`CATCH: ${error}`);
+        }
     });
 }
 
