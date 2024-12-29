@@ -1,8 +1,10 @@
+import sys
 import machine # type: ignore
 import socket
 import network # type: ignore
 import os
 import json
+import time
 import uasyncio as asyncio # type: ignore
 import gc
 
@@ -21,6 +23,48 @@ left = machine.Pin(2, machine.Pin.OUT)
 gear_speed = machine.Pin(28, machine.Pin.OUT)
 toggle_mode = machine.Pin(26, machine.Pin.OUT)
 
+start_time = time.time()
+# [days:hours:minutes:seconds] [function_name()] [category] message
+# category: INFO, WARNING, ERROR, DEBUG
+#           (1) INFO - general information
+#           (2) WARNING - warning information
+#           (3) ERROR - error information
+#           (4) DEBUG - debug information
+# example: [00:00:00:00] [main()] [INFO] Hello, World!
+# returns in css color format
+category_map = {
+    1: ["INFO", "#0000FF"],
+    2: ["WARNING", "#FFA500"],
+    3: ["ERROR", "#FF0000"],
+    4: ["DEBUG", "#00FF00"]
+}
+log = lambda func__name, category, msg: print(f"[{int(time.time() - start_time) // 86400:02}:{(int(time.time() - start_time) % 86400) // 3600:02}:{(int(time.time() - start_time) % 3600) // 60:02}:{int(time.time() - start_time) % 60:02}] [{func__name}()] [{category_map[category][0]}] {msg}")
+
+# decorator to get function name because "traceback" module is not available in micropython
+func__name__ = None
+def get_func__name__(func):
+    def wrapper(*args, **kwargs):
+        global func__name__
+        func__name__ = func.__name__
+        return func(*args, **kwargs)
+    return wrapper
+
+# https://github.com/yuan-miranda/microfilesys/blob/main/microfilesys.py#L62
+def microfilesys_rjust(string, width, fill_char=' '):
+    """Returns a right-justified string."""
+    if len(string) >= width:
+        return string
+    else:
+        padding = fill_char * (width - len(string))
+        return padding + string
+def microfilesys_ljust(string, width, fill_char=' '):
+    """Returns a left-justified string."""
+    if len(string) >= width:
+        return string
+    else:
+        padding = fill_char * (width - len(string))
+        return string + padding
+
 def led_on():
     led.value(1)
 def led_off():
@@ -29,22 +73,24 @@ def led_toggle():
     led.value(not led.value())
 
 # init access point
+@get_func__name__
 def init_ap():
     ap = network.WLAN(network.AP_IF)
     ap.config(essid=ssid, password=password)
     ap.active(True)
     while not ap.active():
         pass
-    print(f"[init_ap()] access point started at: {ap.ifconfig()}")
+    log(func__name__, 1, f"access point started at: {ap.ifconfig()}")
     return ap
 
 # init socket
+@get_func__name__
 def init_socket():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', port))
     s.listen(5)
-    print(f"[init_socket()] socket listening on port: {port}")
+    log(func__name__, 1, f"socket listening on port: {port}")
     return s
 
 def file_exists(path):
@@ -95,7 +141,7 @@ async def send_response(conn, content_type, content):
     conn.close()
     gc.collect()
 
-
+@get_func__name__
 async def handle_request(request):
     conn, _ = request
     try:      
@@ -104,7 +150,7 @@ async def handle_request(request):
         try:
             request_line = request.split("\r\n")[0]
             request_type, request_path, _ = request_line.split(" ")
-            print(f"[handle_request()] request: {request_type} {request_path}")
+            log(func__name__, 1, f"request: {request_type} {request_path}")
         except:
             request_path = "/"
 
@@ -113,14 +159,6 @@ async def handle_request(request):
         elif "media" in request_path:
             path = request_path[1:]
         elif request_path == "/api/get/scripts":
-            # returns a list of all script folder names in json format
-            """
-                scripts/
-                    pico-rc/
-                        control.py
-                        ...
-                    ...
-            """
             scripts = os.listdir("scripts")
             response = { "scripts": scripts }
             json_content = json.dumps(response)
@@ -153,48 +191,36 @@ async def handle_request(request):
         else:
             await send_response(conn, "text/plain", "404 Not Found".encode())
     except Exception as e:
-        print(f"[handle_request()] exception: {e}")
+        log(func__name__, 3, f"exception: {e}")
         await send_response(conn, "text/plain", "500 Internal Server Error".encode())
 
-async def main():
-    ap = init_ap()
-    s = init_socket()
+@get_func__name__
+def run_script(script_name):
     try:
-        while True:
-            try:
-                request = s.accept()
-                await handle_request(request)
-            except Exception as e:
-                print(f"[main()] [while] exception: {e}")
+        with open(script_name, 'r') as file:
+            script_code = file.read()
+            exec(script_code)
+            log(func__name__, 1, f"executed successfully: {script_name}")
     except Exception as e:
-        print(f"[main()] exception: {e}")
-    finally:
-        s.close()
-        ap.active(False)
-        print("[main()] socket closed and access point deactivated")
+        log(func__name__, 3, f"error executing {script_name}: {e}")
 
-# this one implementation will re activate the access point
+@get_func__name__
 async def main():
     while True:
         try:
             ap = init_ap()
             s = init_socket()
             while True:
-                try:
-                    request = s.accept()
-                    await handle_request(request)
-                except Exception as e:
-                    # bro just restarts the connection each time it throws an exception lmao
-                    print(f"[main()] [while] exception: {e}")
-                    break
+                request = s.accept()
+                await handle_request(request)
         except Exception as e:
-            print(f"[main()] exception: {e}")
+            log(func__name__, 3, f"exception: {e}")
         finally:
-            s.close()
-            ap.active(False)
-            print("[main()] socket closed and access point deactivated")
+            if s:
+                s.close()
+            if ap:
+                ap.active(False)
             gc.collect()
-            await asyncio.sleep(1)
-            print("[main()] reactivating access point")
 
+# board ip: 192.168.4.1
 asyncio.run(main())
