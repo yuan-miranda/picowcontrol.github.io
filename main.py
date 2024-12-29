@@ -31,7 +31,6 @@ start_time = time.time()
 #           (3) ERROR - error information
 #           (4) DEBUG - debug information
 # example: [00:00:00:00] [main()] [INFO] Hello, World!
-# returns in css color format
 category_map = {
     1: ["INFO", "#0000FF"],
     2: ["WARNING", "#FFA500"],
@@ -158,12 +157,23 @@ async def handle_request(request):
             path = "static/html/index.html"
         elif "media" in request_path:
             path = request_path[1:]
+
+        # NOTE: me using the term "script" is a bit ambiguous, but it refers to a folder containing
+        # a list of actions from "scripts" directory which in turn, "actions" are the .py files inside
+        # that folder. The "scripts" directory is located in the root directory of this project/pico.
+
+        # TEMP: didnt think about how i would actually execute those scripts, but my idea was to kind of
+        # "include" the codes in there to this main.py file, sort of like a "extension" to organize and
+        # separate each action into their own thing.
+
+        # sends a list of scripts in the "scripts" directory
         elif request_path == "/api/get/scripts":
             scripts = os.listdir("scripts")
             response = { "scripts": scripts }
             json_content = json.dumps(response)
             await send_response(conn, "application/json", json_content.encode())
             return
+        # sends a list of actions in the specified script folder
         elif "/api/get/actions/" in request_path:
             script = request_path.split("/")[-1]
 
@@ -172,6 +182,7 @@ async def handle_request(request):
                 await send_response(conn, "text/plain", "403 Forbidden".encode())
                 return
 
+            # check if script exists
             if not dir_exists(f"scripts/{script}"):
                 await send_response(conn, "text/plain", "404 Not Found".encode())
                 return
@@ -181,6 +192,7 @@ async def handle_request(request):
             json_content = json.dumps(response)
             await send_response(conn, "application/json", json_content.encode())
             return
+
         else:
             path = f"static{request_path}"
 
