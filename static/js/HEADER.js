@@ -155,6 +155,7 @@ function addActiveClassToRibbonBtn(btn) {
 async function loadScriptDropdown() {
     const scriptDropdown = document.getElementById("scriptDropdown");
     try {
+        // fetch a list of scripts in the "scripts" directory
         const response = await fetch("/api/get/scripts");
         if (!response.ok) {
             alert("Failed to fetch scripts");
@@ -178,6 +179,7 @@ async function loadScriptDropdown() {
 async function loadRibbonActionsNoRedirect(script) {
     const ribbonActions = document.querySelector(".ribbon-actions ul");
     try {
+        // fetch a list of actions in the specified script folder
         const response = await fetch(`/api/get/actions/${script}`);
         if (!response.ok) {
             if (response.status === 403) {
