@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+        }
+
+        .hold {
+            background-color: red;
+        }
+
+        .holdBtn {
+            margin-top: 10px;
+            padding: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="boxes" style="display: flex;">
+        <div class="box" id="box1"></div>
+        <div class="box" id="box2"></div>
+    </div>
+    <div class="buttons">
+        <button class="holdBtn" id="holdBtn1">HOLD</button>
+        <button class="holdBtn" id="holdBtn2">HOLD</button>
+    </div>
+    <script>
+        box1 = document.getElementById('box1');
+        box2 = document.getElementById('box2');
+        boxBtn1 = document.getElementById('holdBtn1');
+        boxBtn2 = document.getElementById('holdBtn2');
+
+        boxBtn1.addEventListener('touchstart', function() {
+            console.log('touchstart boxBtn1');
+            box1.style.backgroundColor = 'red';
+        });
+        boxBtn1.addEventListener('touchend', function() {
+            console.log('touchend boxBtn1');
+            box1.style.backgroundColor = 'white';
+        });
+
+        boxBtn2.addEventListener('touchstart', function() {
+            console.log('touchstart boxBtn2');
+            box2.style.backgroundColor = 'red';
+        });
+        boxBtn2.addEventListener('touchend', function() {
+            console.log('touchend boxBtn2');
+            box2.style.backgroundColor = 'white';
+        });
+    </script>
+</body>
+</html>

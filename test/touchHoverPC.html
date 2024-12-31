@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+        }
+
+        .hold {
+            background-color: red;
+        }
+
+        .holdBtn {
+            margin-top: 10px;
+            padding: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="boxes" style="display: flex;">
+        <div class="box" id="box1"></div>
+        <div class="box" id="box2"></div>
+    </div>
+    <div class="buttons">
+        <button class="holdBtn" id="holdBtn1">HOLD</button>
+        <button class="holdBtn" id="holdBtn2">HOLD</button>
+    </div>
+    <script>
+        let isHolding = false;
+
+        function setupBox(boxSelector, buttonSelector) {
+            const box = document.querySelector(boxSelector);
+            const holdBtn = document.querySelector(buttonSelector);
+
+
+            holdBtn.addEventListener('pointerdown', () => {
+                console.log('pointerdown isHolding=true add(hold)');
+                isHolding = true;
+                box.classList.add('hold');
+            });
+
+            // holdBtn.addEventListener('pointerup', () => {
+            //     console.log('pointerup');
+            //     if (isHolding) {
+            //         console.log('pointerup holding isHolding=false remove(hold)');
+            //         isHolding = false;
+            //         box.classList.remove('hold');
+            //     }
+            // });
+
+            holdBtn.addEventListener('pointerout', () => {
+                console.log('pointerout');
+                if (isHolding) {
+                    console.log('pointerout holding remove(hold)');
+                    box.classList.remove('hold');
+                }
+            });
+
+            holdBtn.addEventListener('pointerenter', () => {
+                console.log('pointerenter');
+                if (isHolding) {
+                    console.log('pointerenter holding add(hold)');
+                    box.classList.add('hold');
+                }
+            });
+
+            holdBtn.addEventListener('pointermove', (event) => {
+                console.log('pointermove');
+                if (isHolding && !holdBtn.contains(event.target)) {
+                    console.log('pointermove holding !holdBtn add(hold)');
+                    box.classList.add('hold');
+                }
+            });
+        }
+
+        // put the pointerup in document level instead
+        document.addEventListener('pointerup', () => {
+            console.log('document pointerup');
+            if (isHolding) {
+                console.log('document pointerup holding isHolding=false remove(hold)');
+                isHolding = false;
+                const box1 = document.querySelector('#box1');
+                const box2 = document.querySelector('#box2');
+                box1.classList.remove('hold');
+                box2.classList.remove('hold');
+            }
+        });
+
+        document.addEventListener('pointermove', (event) => {
+            if (isHolding) {
+                const box1 = document.querySelector('#box1');
+                const box2 = document.querySelector('#box2');
+                const holdBtn1 = document.querySelector('#holdBtn1');
+                const holdBtn2 = document.querySelector('#holdBtn2');
+
+                if (holdBtn1.contains(event.target)) {
+                    box1.classList.add('hold');
+                    box2.classList.remove('hold');
+                } else if (holdBtn2.contains(event.target)) {
+                    box2.classList.add('hold');
+                    box1.classList.remove('hold');
+                }
+            }
+        });
+
+        setupBox('#box1', '#holdBtn1');
+        setupBox('#box2', '#holdBtn2');
+    </script>
+</body>
+</html>
