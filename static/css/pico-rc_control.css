@@ -20,13 +20,13 @@
     font-size: 5rem;
     padding: 1rem;
     border-radius: 0.5rem;
-    transition: transform 0.2s;
+    /* transition: transform 0.2s; */
 }
 
-.grid-item:hover {
+/* .grid-item:hover {
     transform: scale(1.01);
     background-color: #e0e0e0;
-}
+} */
 
 /* positions of buttons */
 .item1 { grid-column: 1; grid-row: 1; }

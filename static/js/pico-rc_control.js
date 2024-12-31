@@ -7,13 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let forwardClickCount = 0, backwardClickCount = 0, gearSpeedClickCount = 0, toggleModeClickCount = 0, rightClickCount = 0, leftClickCount = 0;
 
     async function sendControlStates(controlStates) {
-        const response = await fetch(`/api/run/action/control/${controlStates}`);
-        const data = await response.text();
-        if (response.ok) {
-            console.log("Control states sent successfully:", controlStates);
-        } else {
-            console.error("Failed to send control states:", data);
-        }
+        await fetch(`/api/run/action/control/${controlStates}`);
     }
 
     function getControlStates() {
@@ -69,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        debounceTimer = setTimeout(() => debounceTimer = null, 100);
+        debounceTimer = setTimeout(() => debounceTimer = null, 50); // original: 100ms
         toggleButtonState(button);
     }
 
@@ -80,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (toggleModeClickCount > 0) toggleModeClickCount--;
         if (rightClickCount > 0) rightClickCount--;
         if (leftClickCount > 0) leftClickCount--;
-    }, 30);
+    }, 30); // original: 30ms
 
     const forwardBtn = document.getElementById("forwardBtn");
     const backwardBtn = document.getElementById("backwardBtn");
@@ -89,21 +83,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const rightBtn = document.getElementById("rightBtn");
     const leftBtn = document.getElementById("leftBtn");
 
-    forwardBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, forwardBtn));
-    forwardBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, forwardBtn));
+    // forwardBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, forwardBtn));
+    // forwardBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, forwardBtn));
 
-    backwardBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, backwardBtn));
-    backwardBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, backwardBtn));
+    // backwardBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, backwardBtn));
+    // backwardBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, backwardBtn));
 
-    gearSpeedBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, gearSpeedBtn));
-    gearSpeedBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, gearSpeedBtn));
+    // gearSpeedBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, gearSpeedBtn));
+    // gearSpeedBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, gearSpeedBtn));
 
-    toggleModeBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, toggleModeBtn));
-    toggleModeBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, toggleModeBtn));
+    // toggleModeBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, toggleModeBtn));
+    // toggleModeBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, toggleModeBtn));
 
-    rightBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, rightBtn));
-    rightBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, rightBtn));
+    // rightBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, rightBtn));
+    // rightBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, rightBtn));
 
-    leftBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, leftBtn));
-    leftBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, leftBtn));
+    // leftBtn.addEventListener("pointerdown", (e) => holdToggleBtn(e, leftBtn));
+    // leftBtn.addEventListener("pointerup", (e) => holdToggleBtn(e, leftBtn));
+
+    // use touchstart and touchend events for mobile devices
+    forwardBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, forwardBtn));
+    forwardBtn.addEventListener("touchend", (e) => holdToggleBtn(e, forwardBtn));
+
+    backwardBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, backwardBtn));
+    backwardBtn.addEventListener("touchend", (e) => holdToggleBtn(e, backwardBtn));
+
+    gearSpeedBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, gearSpeedBtn));
+    gearSpeedBtn.addEventListener("touchend", (e) => holdToggleBtn(e, gearSpeedBtn));
+
+    toggleModeBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, toggleModeBtn));
+    toggleModeBtn.addEventListener("touchend", (e) => holdToggleBtn(e, toggleModeBtn));
+
+    rightBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, rightBtn));
+    rightBtn.addEventListener("touchend", (e) => holdToggleBtn(e, rightBtn));
+
+    leftBtn.addEventListener("touchstart", (e) => holdToggleBtn(e, leftBtn));
+    leftBtn.addEventListener("touchend", (e) => holdToggleBtn(e, leftBtn));
 });
